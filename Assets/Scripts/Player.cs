@@ -23,9 +23,13 @@ public class Player : MonoBehaviour
     [SerializeField] CapsuleCollider2D defaultCol;
     [SerializeField] CapsuleCollider2D flyCol;
 
+    [Header("Fly Config.")]
+    float gravityBase;
+
     float speedX;
     float speedY;
     bool isGrounded;
+    bool isFlying;
     bool isIdle;
     bool isAttacking;
     bool isLookLeft;
@@ -36,6 +40,7 @@ public class Player : MonoBehaviour
         defaultCol.enabled = true;
         flyCol.enabled = false;
         hammerCol.enabled = false;
+        gravityBase = rb.gravityScale;
     }
 
     // Update is called once per frame
@@ -63,11 +68,29 @@ public class Player : MonoBehaviour
             stopIdleAnimation();
         }
 
+        if (Input.GetButtonDown("Jump") && !isGrounded && !isFlying)
+        {
+            rb.velocity = new Vector2(rb.velocity.x, 0.9f);
+            isFlying = true;
+            rb.gravityScale = 0.1f;
+        }
+
+        if (Input.GetButtonUp("Jump"))
+        {
+            stopFly();
+        }
+
+        if (isGrounded && isFlying)
+        {
+            stopFly();
+        }
+
         if (Input.GetButtonDown("Fire1") && !isAttacking)
         {
             isAttacking = true;
             attack();
             stopIdleAnimation();
+            stopFly();
         }
 
         if (Input.GetButtonDown("Fire2") && !isAttacking)
@@ -75,6 +98,7 @@ public class Player : MonoBehaviour
             isAttacking = true;
             anim.SetTrigger("Shot");
             stopIdleAnimation();
+            stopFly();
         }
     }
 
@@ -93,6 +117,8 @@ public class Player : MonoBehaviour
     void updateAnimator()
     {
         anim.SetBool("isGrounded", isGrounded);
+        anim.SetBool("isFlying", isFlying);
+        anim.SetBool("isAttacking", isAttacking);
         anim.SetInteger("speedX", (int)speedX);
         anim.SetFloat("speedY", speedY);
     }
@@ -127,6 +153,12 @@ public class Player : MonoBehaviour
     {
         isIdle = false;
         StopCoroutine(idle2());
+    }
+
+    void stopFly()
+    {
+        isFlying = false;
+        rb.gravityScale = gravityBase;
     }
 
     void jump()
