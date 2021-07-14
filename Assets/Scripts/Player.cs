@@ -20,6 +20,8 @@ public class Player : MonoBehaviour
 
     [Header("Colliders Config.")]
     [SerializeField] BoxCollider2D hammerCol;
+    [SerializeField] CapsuleCollider2D defaultCol;
+    [SerializeField] CapsuleCollider2D flyCol;
 
     float speedX;
     float speedY;
@@ -31,6 +33,8 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        defaultCol.enabled = true;
+        flyCol.enabled = false;
         hammerCol.enabled = false;
     }
 
@@ -83,6 +87,7 @@ public class Player : MonoBehaviour
     void LateUpdate()
     {
         updateAnimator();
+        updateColliders();
     }
 
     void updateAnimator()
@@ -90,6 +95,20 @@ public class Player : MonoBehaviour
         anim.SetBool("isGrounded", isGrounded);
         anim.SetInteger("speedX", (int)speedX);
         anim.SetFloat("speedY", speedY);
+    }
+
+    void updateColliders()
+    {
+        if (isFlying && !flyCol.enabled)
+        {
+            defaultCol.enabled = false;
+            flyCol.enabled = true;
+        }
+        else if (!isFlying && !defaultCol.enabled)
+        {
+            defaultCol.enabled = true;
+            flyCol.enabled = false;
+        }
     }
 
     internal void OnAttackComplete()
