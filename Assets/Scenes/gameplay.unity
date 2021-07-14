@@ -1631,9 +1631,10 @@ GameObject:
   m_Component:
   - component: {fileID: 544476199}
   - component: {fileID: 544476198}
+  - component: {fileID: 544476200}
   m_Layer: 0
   m_Name: Water
-  m_TagString: Untagged
+  m_TagString: Water
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1700,10 +1701,37 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 1.481, y: -3.0416, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 1844218814}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &544476200
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 544476197}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.0012319088, y: -0.1696353}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 0.35, y: 0.35}
+    newSize: {x: 3.6999748, y: 2.249101}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 2
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 3.7253985, y: 1.9868445}
+  m_EdgeRadius: 0
 --- !u!1 &564361947
 GameObject:
   m_ObjectHideFlags: 0
@@ -2429,6 +2457,7 @@ GameObject:
   - component: {fileID: 1281077734}
   - component: {fileID: 1281077735}
   - component: {fileID: 1281077737}
+  - component: {fileID: 1281077738}
   - component: {fileID: 1281077736}
   m_Layer: 0
   m_Name: Player
@@ -2478,7 +2507,7 @@ SpriteRenderer:
   m_SortingLayerID: 2138182459
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 3255893929082688983, guid: 9880137360ac8fb44b239deb4fc6b1aa, type: 3}
+  m_Sprite: {fileID: 1803301476505855718, guid: 9880137360ac8fb44b239deb4fc6b1aa, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -2591,6 +2620,9 @@ MonoBehaviour:
   hammerCol: {fileID: 1131984959}
   defaultCol: {fileID: 1281077735}
   flyCol: {fileID: 1281077737}
+  snorkCol: {fileID: 1281077738}
+  gravityInWater: 0.3
+  swimImpulse: 300
 --- !u!70 &1281077737
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -2606,6 +2638,22 @@ CapsuleCollider2D:
   m_UsedByComposite: 0
   m_Offset: {x: 0.17556934, y: 0.2471006}
   m_Size: {x: 0.86856115, y: 0.6604753}
+  m_Direction: 1
+--- !u!70 &1281077738
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1281077730}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.037549805, y: -0.042884886}
+  m_Size: {x: 1.2758751, y: 0.7881956}
   m_Direction: 1
 --- !u!1 &1299146288
 GameObject:
@@ -3220,6 +3268,59 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1844218813
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1844218814}
+  - component: {fileID: 1844218815}
+  m_Layer: 0
+  m_Name: Submerged
+  m_TagString: Submerged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1844218814
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1844218813}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.585, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 544476199}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!68 &1844218815
+EdgeCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1844218813}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_EdgeRadius: 0
+  m_Points:
+  - {x: -1.8415089, y: 0}
+  - {x: 1.8471692, y: 0}
+  m_AdjacentStartPoint: {x: 0, y: 0}
+  m_AdjacentEndPoint: {x: 0, y: 0}
+  m_UseAdjacentStartPoint: 0
+  m_UseAdjacentEndPoint: 0
 --- !u!1 &1887768024
 GameObject:
   m_ObjectHideFlags: 0
