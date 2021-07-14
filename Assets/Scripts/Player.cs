@@ -22,14 +22,22 @@ public class Player : MonoBehaviour
     [SerializeField] BoxCollider2D hammerCol;
     [SerializeField] CapsuleCollider2D defaultCol;
     [SerializeField] CapsuleCollider2D flyCol;
+    [SerializeField] CapsuleCollider2D snorkCol;
 
     [Header("Fly Config.")]
     float gravityBase;
+
+    [Header("Snork Config.")]
+    [SerializeField] float gravityInWater;
+    [SerializeField] float swimImpulse;
 
     float speedX;
     float speedY;
     bool isGrounded;
     bool isFlying;
+    bool isFlyStarted;
+    bool isSnorkeling;
+    bool isWater;
     bool isIdle;
     bool isAttacking;
     bool isLookLeft;
@@ -39,6 +47,7 @@ public class Player : MonoBehaviour
     {
         defaultCol.enabled = true;
         flyCol.enabled = false;
+        snorkCol.enabled = false;
         hammerCol.enabled = false;
         gravityBase = rb.gravityScale;
     }
@@ -62,62 +71,75 @@ public class Player : MonoBehaviour
         if (isLookLeft && speedX > 0) { flip(); }
         if (!isLookLeft && speedX < 0) { flip(); }
 
-        if (Input.GetButtonDown("Jump") && isGrounded)
-        {
-            jump();
-            stopIdleAnimation();
-        }
-
-        if (Input.GetButtonDown("Jump") && !isGrounded && !isFlying)
-        {
-            rb.velocity = new Vector2(rb.velocity.x, 0.9f);
-            isFlying = true;
-            rb.gravityScale = 0.1f;
-        }
-
-        if (Input.GetButtonUp("Jump"))
-        {
-            stopFly();
-        }
-
         if (isGrounded && isFlying)
         {
             stopFly();
         }
 
-        if (Input.GetButtonDown("Fire1") && !isAttacking)
+        if (!isWater)
         {
-            isAttacking = true;
-            attack();
-            stopIdleAnimation();
-            stopFly();
+            if (Input.GetButtonDown("Jump") && isGrounded)
+            {
+                jump();
+                stopIdleAnimation();
+            }
+
+            if (Input.GetButtonDown("Jump") && !isGrounded && !isFlying)
+            {
+                if (!isFlyStarted)
+                {
+                    rb.velocity = new Vector2(rb.velocity.x, 0.9f);
+                    isFlyStarted = true;
+                }
+                isFlying = true;
+                rb.gravityScale = 0.1f;
+            }
+
+            if (Input.GetButtonUp("Jump"))
+            {
+                stopFly();
+            }
+
+            if (Input.GetButtonDown("Fire1") && !isAttacking)
+            {
+                isAttacking = true;
+                attack();
+                stopIdleAnimation();
+                stopFly();
+            }
+
+            if (Input.GetButtonDown("Fire2") && !isAttacking)
+            {
+                isAttacking = true;
+                anim.SetTrigger("Shot");
+                stopIdleAnimation();
+                stopFly();
+            }
+        }
+        else if (isSnorkeling)
+        {
+            if (Input.GetButtonDown("Jump"))
+            {
+                rb.AddForce(new Vector2(0, swimImpulse));
+            }
         }
 
-        if (Input.GetButtonDown("Fire2") && !isAttacking)
-        {
-            isAttacking = true;
-            anim.SetTrigger("Shot");
-            stopIdleAnimation();
-            stopFly();
-        }
+        updateAnimator();
+        updateColliders();
     }
 
     void FixedUpdate()
     {
         isGrounded = Physics2D.OverlapArea(groundCheckLeft.position, groundCheckRight.position, whatIsGround);
+        if (isGrounded) { isFlyStarted = false; }
         rb.velocity = new Vector2(speedX * moveSpeed, speedY);
-    }
-
-    void LateUpdate()
-    {
-        updateAnimator();
-        updateColliders();
     }
 
     void updateAnimator()
     {
         anim.SetBool("isGrounded", isGrounded);
         anim.SetBool("isFlying", isFlying);
+        anim.SetBool("isSnorkeling", isSnorkeling);
         anim.SetBool("isAttacking", isAttacking);
         anim.SetInteger("speedX", (int)speedX);
         anim.SetFloat("speedY", speedY);
@@ -125,14 +147,22 @@ public class Player : MonoBehaviour
 
     void updateColliders()
     {
-        if (isFlying && !flyCol.enabled)
+        if (isSnorkeling && !snorkCol.enabled)
         {
+            snorkCol.enabled = true;
             defaultCol.enabled = false;
-            flyCol.enabled = true;
+            flyCol.enabled = false;
         }
-        else if (!isFlying && !defaultCol.enabled)
+        else if (isFlying && !flyCol.enabled)
+        {
+            flyCol.enabled = true;
+            snorkCol.enabled = false;
+            defaultCol.enabled = false;
+        }
+        else if (!isFlying && !isSnorkeling && !defaultCol.enabled)
         {
             defaultCol.enabled = true;
+            snorkCol.enabled = false;
             flyCol.enabled = false;
         }
     }
@@ -192,5 +222,39 @@ public class Player : MonoBehaviour
     {
         yield return new WaitForSeconds(5f);
         anim.SetTrigger("Idle");
+    }
+
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        switch(collision.gameObject.tag)
+        {
+            case "Water":
+                print("Entrou na agua");
+                isWater = true;
+                isFlying = false;
+                break;
+            case "Submerged":
+                if (!isSnorkeling)
+                {
+                    print("Submerged!");
+                    isSnorkeling = true;
+                    rb.velocity = new Vector2(0, 0);
+                    rb.gravityScale = gravityInWater;
+                }
+                break;
+        }
+    }
+
+    void OnTriggerExit2D(Collider2D collision)
+    {
+        switch (collision.gameObject.tag)
+        {
+            case "Water":
+                print("Saiu da agua");
+                isWater = false;
+                isSnorkeling = false;
+                rb.gravityScale = gravityBase;
+                break;
+        }
     }
 }
