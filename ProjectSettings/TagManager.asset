@@ -38,6 +38,9 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Background
+    uniqueID: 2765813255
+    locked: 0
   - name: Scenario
     uniqueID: 1134104749
     locked: 0
