@@ -2428,6 +2428,7 @@ GameObject:
   - component: {fileID: 1281077733}
   - component: {fileID: 1281077734}
   - component: {fileID: 1281077735}
+  - component: {fileID: 1281077737}
   - component: {fileID: 1281077736}
   m_Layer: 0
   m_Name: Player
@@ -2477,7 +2478,7 @@ SpriteRenderer:
   m_SortingLayerID: 2138182459
   m_SortingLayer: 1
   m_SortingOrder: 0
-  m_Sprite: {fileID: 1803301476505855718, guid: 9880137360ac8fb44b239deb4fc6b1aa, type: 3}
+  m_Sprite: {fileID: 3255893929082688983, guid: 9880137360ac8fb44b239deb4fc6b1aa, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -2588,6 +2589,24 @@ MonoBehaviour:
   spawnBall: {fileID: 1247575418}
   ballSpeed: 10
   hammerCol: {fileID: 1131984959}
+  defaultCol: {fileID: 1281077735}
+  flyCol: {fileID: 1281077737}
+--- !u!70 &1281077737
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1281077730}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0.17556934, y: 0.2471006}
+  m_Size: {x: 0.86856115, y: 0.6604753}
+  m_Direction: 1
 --- !u!1 &1299146288
 GameObject:
   m_ObjectHideFlags: 0
