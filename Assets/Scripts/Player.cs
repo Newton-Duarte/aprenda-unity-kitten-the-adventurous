@@ -45,6 +45,8 @@ public class Player : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        QualitySettings.vSyncCount = 0;
+        Application.targetFrameRate = 60;
         defaultCol.enabled = true;
         flyCol.enabled = false;
         snorkCol.enabled = false;
@@ -236,7 +238,7 @@ public class Player : MonoBehaviour
             case "Submerged":
                 if (!isSnorkeling)
                 {
-                    print("Submerged!");
+                    print("Submerso!");
                     isSnorkeling = true;
                     rb.velocity = new Vector2(0, 0);
                     rb.gravityScale = gravityInWater;
