@@ -6,6 +6,13 @@ TagManager:
   tags:
   - Water
   - Submerged
+  - HammerHit
+  - BallHit
+  - MovablePlatform
+  - ShopItem
+  - Exit
+  - Collectable
+  - HitBox
   layers:
   - Default
   - TransparentFX
@@ -14,8 +21,8 @@ TagManager:
   - Water
   - UI
   - Ground
-  - 
-  - 
+  - Enemy
+  - Hit Collision
   - 
   - 
   - 
