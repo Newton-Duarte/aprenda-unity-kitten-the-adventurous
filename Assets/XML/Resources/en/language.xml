@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<language>
+  <interface name="title_interface">
+    <texts>
+      <text>Press ESC to options</text>
+      <text>Press ENTER to play</text>
+    </texts>
+  </interface>
+
+  <interface name="shop_interface">
+    <texts>
+      <text>Hammer</text>
+      <text>Ball</text>
+      <text>Cloak</text>
+      <text>Snork</text>
+    </texts>
+  </interface>
+
+  <interface name="stage_name">
+    <texts>
+      <text>Stage 01 - The Enchanted Forest</text>
+    </texts>
+  </interface>
+</language>

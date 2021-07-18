@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<language>
+  <interface name="title_interface">
+    <texts>
+      <text>Pressione ESC para opções</text>
+      <text>Pressione ENTER para jogar</text>
+    </texts>
+  </interface>
+
+  <interface name="shop_interface">
+    <texts>
+      <text>Martelo</text>
+      <text>Bola</text>
+      <text>Capa</text>
+      <text>Capacete</text>
+    </texts>
+  </interface>
+
+  <interface name="stage_name">
+    <texts>
+      <text>Fase 01 - A Floresta Encantada</text>
+    </texts>
+  </interface>
+</language>
