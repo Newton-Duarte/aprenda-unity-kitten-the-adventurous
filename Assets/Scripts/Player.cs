@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    GameController _gameController;
+
     [SerializeField] Rigidbody2D rb;
     [SerializeField] Animator anim;
 
@@ -42,11 +44,21 @@ public class Player : MonoBehaviour
     bool isAttacking;
     bool isLookLeft;
 
+    // Shop
+    bool isHammer;
+    bool isBall;
+    bool isCloak;
+    bool isSnork;
+
+    // Exit
+    bool isExit;
+
     // Start is called before the first frame update
     void Start()
     {
-        QualitySettings.vSyncCount = 0;
-        Application.targetFrameRate = 60;
+        //QualitySettings.vSyncCount = 0;
+        //Application.targetFrameRate = 60;
+        _gameController = FindObjectOfType(typeof(GameController)) as GameController;
         defaultCol.enabled = true;
         flyCol.enabled = false;
         snorkCol.enabled = false;
@@ -86,7 +98,7 @@ public class Player : MonoBehaviour
                 stopIdleAnimation();
             }
 
-            if (Input.GetButtonDown("Jump") && !isGrounded && !isFlying)
+            if (Input.GetButtonDown("Jump") && !isGrounded && !isFlying && isCloak)
             {
                 if (!isFlyStarted)
                 {
@@ -102,7 +114,7 @@ public class Player : MonoBehaviour
                 stopFly();
             }
 
-            if (Input.GetButtonDown("Fire1") && !isAttacking)
+            if (Input.GetButtonDown("Fire1") && !isAttacking && isHammer)
             {
                 isAttacking = true;
                 attack();
@@ -110,7 +122,7 @@ public class Player : MonoBehaviour
                 stopFly();
             }
 
-            if (Input.GetButtonDown("Fire2") && !isAttacking)
+            if (Input.GetButtonDown("Fire2") && !isAttacking && isBall)
             {
                 isAttacking = true;
                 anim.SetTrigger("Shot");
@@ -123,6 +135,14 @@ public class Player : MonoBehaviour
             if (Input.GetButtonDown("Jump"))
             {
                 rb.AddForce(new Vector2(0, swimImpulse));
+            }
+        }
+
+        if (isExit)
+        {
+            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+            {
+                _gameController._fadeController.startFade(3);
             }
         }
 
@@ -244,6 +264,15 @@ public class Player : MonoBehaviour
                     rb.gravityScale = gravityInWater;
                 }
                 break;
+            case "ShopItem":
+                collision.SendMessage("openShop", SendMessageOptions.DontRequireReceiver);
+                break;
+            case "Collectable":
+                collision.SendMessage("collect", SendMessageOptions.DontRequireReceiver);
+                break;
+            case "Exit":
+                isExit = true;
+                break;
         }
     }
 
@@ -256,6 +285,53 @@ public class Player : MonoBehaviour
                 isWater = false;
                 isSnorkeling = false;
                 rb.gravityScale = gravityBase;
+                break;
+            case "Exit":
+                isExit = false;
+                break;
+        }
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        switch(collision.gameObject.tag)
+        {
+            case "MovablePlatform":
+                if (groundCheckRight.position.y > collision.transform.position.y)
+                {
+                    rb.interpolation = RigidbodyInterpolation2D.None;
+                    transform.parent = collision.transform;
+                }
+                break;
+        }
+    }
+
+    void OnCollisionExit2D(Collision2D collision)
+    {
+        switch (collision.gameObject.tag)
+        {
+            case "MovablePlatform":
+                rb.interpolation = RigidbodyInterpolation2D.Interpolate;
+                transform.parent = null;
+                break;
+        }
+    }
+
+    internal void updateItems(int idItem)
+    {
+        switch(idItem)
+        {
+            case 0: // Hammer
+                isHammer = true;
+                break;
+            case 1: // Ball
+                isBall = true;
+                break;
+            case 2: // Cloak
+                isCloak = true;
+                break;
+            case 3: // Snork
+                isSnork = true;
                 break;
         }
     }
