@@ -360,6 +360,10 @@ MonoBehaviour:
   snorkCol: {fileID: 6166087720553109851}
   gravityInWater: 0.3
   swimImpulse: 100
+  jumpClip: {fileID: 8300000, guid: 459c074b8912d4f4793ca1635c0c97a6, type: 3}
+  hitClip: {fileID: 8300000, guid: a611d90eec8d7e0489883f6bbf27fe9e, type: 3}
+  hammerHitClip: {fileID: 8300000, guid: 1af3e8c7777d967419ac6f9f21a52e8a, type: 3}
+  ballHitClip: {fileID: 8300000, guid: 3d573c8753ee8894ba0d022bed986aea, type: 3}
 --- !u!1 &6731832190040699905
 GameObject:
   m_ObjectHideFlags: 0
