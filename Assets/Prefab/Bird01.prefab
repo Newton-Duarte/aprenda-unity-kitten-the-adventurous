@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 1402211122130789186}
   m_Layer: 7
   m_Name: Bird01
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -144,3 +144,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hitPoints: 2
+  hitClip: {fileID: 8300000, guid: e36caccc4a299184c9ef7fb263fe6ceb, type: 3}
