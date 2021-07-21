@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class GameController : MonoBehaviour
 {
     internal FadeController _fadeController;
+    internal OptionsController _optionsController;
 
     [Header("Damage Config.")]
     [SerializeField] internal GameObject hitPrefab;
@@ -17,14 +18,25 @@ public class GameController : MonoBehaviour
     [Header("UI Config.")]
     [SerializeField] Text txtCoins;
 
+    [Header("Audio Clips")]
+    [SerializeField] AudioClip coinClip;
+
     void Start()
     {
         _fadeController = FindObjectOfType(typeof(FadeController)) as FadeController;
+        _optionsController = FindObjectOfType(typeof(OptionsController)) as OptionsController;
+        
     }
 
     internal void addCoins(int value)
     {
+        playFX(coinClip);
         coins += value;
         txtCoins.text = $"x{coins}";
+    }
+
+    internal void playFX(AudioClip clip)
+    {
+        _optionsController.playFX(clip);
     }
 }
