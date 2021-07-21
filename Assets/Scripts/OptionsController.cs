@@ -24,10 +24,13 @@ public class OptionsController : MonoBehaviour
     [SerializeField] internal AudioClip titleClip;
     [SerializeField] internal AudioClip startClip;
     [SerializeField] internal AudioClip gameplayClip;
+    [SerializeField] internal AudioClip pauseClip;
+    [SerializeField] internal AudioClip unpauseClip;
 
     string _firstPlaythrough = "FirstPlaythrough";
     string _musicVolume = "MusicVolume";
     string _fxVolume = "FXVolume";
+    
 
     // Start is called before the first frame update
     void Start()
@@ -46,7 +49,22 @@ public class OptionsController : MonoBehaviour
         }
     }
 
-    void toggleOptions() => optionsPanel.SetActive(!optionsPanel.activeInHierarchy);
+    void toggleOptions()
+    {
+        if (optionsPanel.activeInHierarchy)
+        {
+            musicSource.Play();
+            fxSource.PlayOneShot(pauseClip);
+        }
+        else
+        {
+            musicSource.Pause();
+            fxSource.PlayOneShot(unpauseClip);
+        }
+
+        Time.timeScale = optionsPanel.activeInHierarchy ? 1 : 0;
+        optionsPanel.SetActive(!optionsPanel.activeInHierarchy);
+    }
 
     void initializePrefs()
     {
@@ -108,5 +126,10 @@ public class OptionsController : MonoBehaviour
         fxSource.volume = volume;
         fxVolumeText.text = Mathf.Round(volume * 100).ToString();
         PlayerPrefs.SetFloat(_fxVolume, volume);
+    }
+
+    public void playFX(AudioClip clip)
+    {
+        fxSource.PlayOneShot(clip);
     }
 }
