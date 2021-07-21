@@ -8,6 +8,7 @@ public class LifeController : MonoBehaviour
     GameController _gameController;
 
     [SerializeField] int hitPoints;
+    [SerializeField] AudioClip hitClip;
     bool isHit;
 
     // Start is called before the first frame update
@@ -45,6 +46,7 @@ public class LifeController : MonoBehaviour
             case "HitBox":
                 if (!isHit)
                 {
+                    _gameController.playFX(hitClip);
                     isHit = true;
                     StartCoroutine(waitHit());
                     GameObject temp = Instantiate(_gameController.hitPrefab, transform.position, transform.localRotation);
