@@ -45,6 +45,9 @@ public class MoveTowardsAI : MonoBehaviour
     void flipX()
     {
         isLookLeft = !isLookLeft;
-        objectSr.flipX = !objectSr.flipX;
+        float scaleX = objectToMove.localScale.x;
+        scaleX *= -1;
+        objectToMove.localScale = new Vector3(scaleX, objectToMove.localScale.y, objectToMove.localScale.z);
+        //objectSr.flipX = !objectSr.flipX;
     }
 }
