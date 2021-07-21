@@ -33,6 +33,12 @@ public class Player : MonoBehaviour
     [SerializeField] float gravityInWater;
     [SerializeField] float swimImpulse;
 
+    [Header("Audio Clips")]
+    [SerializeField] AudioClip jumpClip;
+    [SerializeField] AudioClip hitClip;
+    [SerializeField] AudioClip hammerHitClip;
+    [SerializeField] AudioClip ballHitClip;
+
     float speedX;
     float speedY;
     bool isGrounded;
@@ -41,6 +47,7 @@ public class Player : MonoBehaviour
     bool isSnorkeling;
     bool isWater;
     bool isIdle;
+    bool isDead;
     bool isAttacking;
     bool isLookLeft;
 
@@ -72,77 +79,82 @@ public class Player : MonoBehaviour
         speedX = Input.GetAxisRaw("Horizontal");
         speedY = rb.velocity.y;
 
-        if (speedX == 0 && isGrounded && !isIdle)
+        if (!isDead)
         {
-            isIdle = true;
-            StartCoroutine(idle2());
-        }
-        else if (speedX != 0 || !isGrounded)
-        {
-            stopIdleAnimation();
-        }
+            rb.velocity = new Vector2(speedX * moveSpeed, speedY);
 
-        if (isLookLeft && speedX > 0) { flip(); }
-        if (!isLookLeft && speedX < 0) { flip(); }
-
-        if (isGrounded && isFlying)
-        {
-            stopFly();
-        }
-
-        if (!isWater)
-        {
-            if (Input.GetButtonDown("Jump") && isGrounded)
+            if (speedX == 0 && isGrounded && !isIdle)
             {
-                jump();
+                isIdle = true;
+                StartCoroutine(idle2());
+            }
+            else if (speedX != 0 || !isGrounded)
+            {
                 stopIdleAnimation();
             }
 
-            if (Input.GetButtonDown("Jump") && !isGrounded && !isFlying && isCloak)
+            if (isLookLeft && speedX > 0) { flip(); }
+            if (!isLookLeft && speedX < 0) { flip(); }
+
+            if (isGrounded && isFlying)
             {
-                if (!isFlyStarted)
+                stopFly();
+            }
+
+            if (!isWater)
+            {
+                if (Input.GetButtonDown("Jump") && isGrounded)
                 {
-                    rb.velocity = new Vector2(rb.velocity.x, 0.9f);
-                    isFlyStarted = true;
+                    jump();
+                    stopIdleAnimation();
                 }
-                isFlying = true;
-                rb.gravityScale = 0.1f;
+
+                if (Input.GetButtonDown("Jump") && !isGrounded && !isFlying && isCloak)
+                {
+                    if (!isFlyStarted)
+                    {
+                        rb.velocity = new Vector2(rb.velocity.x, 0.9f);
+                        isFlyStarted = true;
+                    }
+                    isFlying = true;
+                    rb.gravityScale = 0.1f;
+                }
+
+                if (Input.GetButtonUp("Jump"))
+                {
+                    stopFly();
+                }
+
+                if (Input.GetButtonDown("Fire1") && !isAttacking && isHammer)
+                {
+                    isAttacking = true;
+                    attack();
+                    stopIdleAnimation();
+                    stopFly();
+                }
+
+                if (Input.GetButtonDown("Fire2") && !isAttacking && isBall)
+                {
+                    isAttacking = true;
+                    anim.SetTrigger("Shot");
+                    stopIdleAnimation();
+                    stopFly();
+                }
+            }
+            else if (isSnorkeling)
+            {
+                if (Input.GetButtonDown("Jump"))
+                {
+                    rb.AddForce(new Vector2(0, swimImpulse));
+                }
             }
 
-            if (Input.GetButtonUp("Jump"))
+            if (isExit)
             {
-                stopFly();
-            }
-
-            if (Input.GetButtonDown("Fire1") && !isAttacking && isHammer)
-            {
-                isAttacking = true;
-                attack();
-                stopIdleAnimation();
-                stopFly();
-            }
-
-            if (Input.GetButtonDown("Fire2") && !isAttacking && isBall)
-            {
-                isAttacking = true;
-                anim.SetTrigger("Shot");
-                stopIdleAnimation();
-                stopFly();
-            }
-        }
-        else if (isSnorkeling)
-        {
-            if (Input.GetButtonDown("Jump"))
-            {
-                rb.AddForce(new Vector2(0, swimImpulse));
-            }
-        }
-
-        if (isExit)
-        {
-            if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
-            {
-                _gameController._fadeController.startFade(3);
+                if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
+                {
+                    _gameController._fadeController.startFade(3);
+                }
             }
         }
 
@@ -154,7 +166,6 @@ public class Player : MonoBehaviour
     {
         isGrounded = Physics2D.OverlapArea(groundCheckLeft.position, groundCheckRight.position, whatIsGround);
         if (isGrounded) { isFlyStarted = false; }
-        rb.velocity = new Vector2(speedX * moveSpeed, speedY);
     }
 
     void updateAnimator()
@@ -162,6 +173,7 @@ public class Player : MonoBehaviour
         anim.SetBool("isGrounded", isGrounded);
         anim.SetBool("isFlying", isFlying);
         anim.SetBool("isSnorkeling", isSnorkeling);
+        anim.SetBool("isDead", isDead);
         anim.SetBool("isAttacking", isAttacking);
         anim.SetInteger("speedX", (int)speedX);
         anim.SetFloat("speedY", speedY);
@@ -215,6 +227,7 @@ public class Player : MonoBehaviour
 
     void jump()
     {
+        _gameController.playFX(jumpClip);
         rb.AddForce(new Vector2(rb.velocity.x, jumpForce));
     }
 
@@ -232,17 +245,19 @@ public class Player : MonoBehaviour
     void attack()
     {
         anim.SetTrigger("Attack");
+        _gameController.playFX(hammerHitClip);
     }
 
     internal void shot()
     {
         GameObject ball = Instantiate(ballPrefab, spawnBall.position, transform.localRotation);
         ball.GetComponent<Rigidbody2D>().velocity = new Vector2(ballSpeed, 0);
+        _gameController.playFX(ballHitClip);
     }
 
     IEnumerator idle2()
     {
-        yield return new WaitForSeconds(5f);
+        yield return new WaitForSeconds(10f);
         anim.SetTrigger("Idle");
     }
 
@@ -272,6 +287,15 @@ public class Player : MonoBehaviour
                 break;
             case "Exit":
                 isExit = true;
+                break;
+            case "Enemy":
+                if (transform.position.y < collision.gameObject.transform.position.y && !isDead)
+                {
+                    rb.velocity = Vector2.zero;
+                    defaultCol.enabled = false;
+                    isDead = true;
+                    _gameController.playFX(hitClip);
+                }
                 break;
         }
     }
