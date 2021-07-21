@@ -1380,6 +1380,8 @@ MonoBehaviour:
   titleClip: {fileID: 8300000, guid: 16ca7515e16b187458e4efdecee0a288, type: 3}
   startClip: {fileID: 8300000, guid: 140918e8eefb9f84d8a7b6b288194ec8, type: 3}
   gameplayClip: {fileID: 8300000, guid: 3ec57fb78278b464bb168b9b6225f351, type: 3}
+  pauseClip: {fileID: 8300000, guid: 0bfcaf0125f2d5d42a14a748063b0a86, type: 3}
+  unpauseClip: {fileID: 8300000, guid: 703e3fccd5b3aa74585db1f6074687fb, type: 3}
 --- !u!114 &1174695304
 MonoBehaviour:
   m_ObjectHideFlags: 0
