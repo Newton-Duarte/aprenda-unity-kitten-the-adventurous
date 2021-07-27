@@ -32,7 +32,7 @@ public class LoadController : MonoBehaviour
         {
             isVerified = true;
             _optionsController.StartCoroutine(_optionsController.changeMusic(_optionsController.gameplayClip));
-            _fadeController.startFade(3);
+            _fadeController.startFade(GlobalVariables.nextStage);
         }
     }
 }
