@@ -344,7 +344,7 @@ MonoBehaviour:
   rb: {fileID: 6166087720553109847}
   anim: {fileID: 6166087720553109844}
   moveSpeed: 3
-  jumpForce: 600
+  jumpForce: 500
   groundCheckLeft: {fileID: 6166087720346067779}
   groundCheckRight: {fileID: 6166087720526450328}
   whatIsGround:
