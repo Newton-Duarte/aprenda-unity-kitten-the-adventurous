@@ -6,6 +6,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     GameController _gameController;
+    OptionsController _optionsController;
 
     [SerializeField] Rigidbody2D rb;
     [SerializeField] Animator anim;
@@ -39,6 +40,8 @@ public class Player : MonoBehaviour
     [SerializeField] AudioClip hammerHitClip;
     [SerializeField] AudioClip ballHitClip;
 
+    Coroutine _coroutine;
+
     float speedX;
     float speedY;
     bool isGrounded;
@@ -57,7 +60,6 @@ public class Player : MonoBehaviour
     bool isCloak;
     bool isSnork;
 
-    // Exit
     bool isExit;
 
     // Start is called before the first frame update
@@ -66,11 +68,13 @@ public class Player : MonoBehaviour
         //QualitySettings.vSyncCount = 0;
         //Application.targetFrameRate = 60;
         _gameController = FindObjectOfType(typeof(GameController)) as GameController;
+        _optionsController = FindObjectOfType(typeof(OptionsController)) as OptionsController;
         defaultCol.enabled = true;
         flyCol.enabled = false;
         snorkCol.enabled = false;
         hammerCol.enabled = false;
         gravityBase = rb.gravityScale;
+        loadSavedItems();
     }
 
     // Update is called once per frame
@@ -86,7 +90,8 @@ public class Player : MonoBehaviour
             if (speedX == 0 && isGrounded && !isIdle)
             {
                 isIdle = true;
-                StartCoroutine(idle2());
+                _coroutine = StartCoroutine(idle2());
+
             }
             else if (speedX != 0 || !isGrounded)
             {
@@ -146,14 +151,6 @@ public class Player : MonoBehaviour
                 if (Input.GetButtonDown("Jump"))
                 {
                     rb.AddForce(new Vector2(0, swimImpulse));
-                }
-            }
-
-            if (isExit)
-            {
-                if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow))
-                {
-                    _gameController._fadeController.startFade(3);
                 }
             }
         }
@@ -216,7 +213,8 @@ public class Player : MonoBehaviour
     void stopIdleAnimation()
     {
         isIdle = false;
-        StopCoroutine(idle2());
+        if (_coroutine != null)
+            StopCoroutine(_coroutine);
     }
 
     void stopFly()
@@ -266,12 +264,17 @@ public class Player : MonoBehaviour
         switch(collision.gameObject.tag)
         {
             case "Water":
+                if (!isSnork && !isDead)
+                {
+                    die();
+                    break;
+                }
                 print("Entrou na agua");
                 isWater = true;
                 isFlying = false;
                 break;
             case "Submerged":
-                if (!isSnorkeling)
+                if (!isSnorkeling && isSnork)
                 {
                     print("Submerso!");
                     isSnorkeling = true;
@@ -286,15 +289,23 @@ public class Player : MonoBehaviour
                 collision.SendMessage("collect", SendMessageOptions.DontRequireReceiver);
                 break;
             case "Exit":
-                isExit = true;
+                if (!isExit)
+                {
+                    isExit = true;
+                    int nextStage = collision.gameObject.GetComponent<ExitSceneID>().exitSceneId;
+                    GlobalVariables.nextStage = nextStage;
+                    rb.velocity = Vector2.zero;
+                    _gameController.saveCoins();
+                    saveItems();
+                    _optionsController.musicSource.Stop();
+                    _optionsController.playFX(_optionsController.completedClip);
+                    _gameController.StartCoroutine(_gameController.loadLevelWithDelay(2));
+                }
                 break;
             case "Enemy":
-                if (transform.position.y < collision.gameObject.transform.position.y && !isDead)
+                if (transform.position.y < collision.gameObject.transform.position.y && !isDead && !isAttacking)
                 {
-                    rb.velocity = Vector2.zero;
-                    defaultCol.enabled = false;
-                    isDead = true;
-                    _gameController.playFX(hitClip);
+                    die();
                 }
                 break;
         }
@@ -310,9 +321,6 @@ public class Player : MonoBehaviour
                 isSnorkeling = false;
                 rb.gravityScale = gravityBase;
                 break;
-            case "Exit":
-                isExit = false;
-                break;
         }
     }
 
@@ -327,6 +335,12 @@ public class Player : MonoBehaviour
                     transform.parent = collision.transform;
                 }
                 break;
+            case "Obstacle":
+                if (!isDead)
+                {
+                    die();
+                }
+                break;
         }
     }
 
@@ -339,6 +353,33 @@ public class Player : MonoBehaviour
                 transform.parent = null;
                 break;
         }
+    }
+
+    void die()
+    {
+        isDead = true;
+        resetItems();
+        _gameController.resetCoins();
+        _gameController.playFX(hitClip);
+        rb.velocity = Vector2.zero;
+        defaultCol.enabled = false;
+        _optionsController.startTitleScene();
+    }
+
+    void saveItems()
+    {
+        PlayerPrefs.SetInt("isHammer", isHammer ? 1 : 0);
+        PlayerPrefs.SetInt("isBall", isBall ? 1 : 0);
+        PlayerPrefs.SetInt("isCloak", isCloak ? 1 : 0);
+        PlayerPrefs.SetInt("isSnork", isSnork ? 1 : 0);
+    }
+
+    void loadSavedItems()
+    {
+        isHammer = PlayerPrefs.GetInt("isHammer") == 1 ? true : false;
+        isBall= PlayerPrefs.GetInt("isBall") == 1 ? true : false;
+        isCloak= PlayerPrefs.GetInt("isCloak") == 1 ? true : false;
+        isSnork= PlayerPrefs.GetInt("isSnokr") == 1 ? true : false;
     }
 
     internal void updateItems(int idItem)
@@ -358,5 +399,13 @@ public class Player : MonoBehaviour
                 isSnork = true;
                 break;
         }
+    }
+
+    void resetItems()
+    {
+        PlayerPrefs.DeleteKey("isHammer");
+        PlayerPrefs.DeleteKey("isBall");
+        PlayerPrefs.DeleteKey("isCloak");
+        PlayerPrefs.DeleteKey("isSnork");
     }
 }
