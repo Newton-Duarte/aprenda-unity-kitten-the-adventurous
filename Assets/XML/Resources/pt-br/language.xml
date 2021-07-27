@@ -3,8 +3,14 @@
 <language>
   <interface name="title_interface">
     <texts>
-      <text>Pressione ESC para opções</text>
-      <text>Pressione ENTER para jogar</text>
+      <text>Pressione ESC para Opções</text>
+      <text>Pressione ESPAÇO para Jogar</text>
+    </texts>
+  </interface>
+
+  <interface name="win_interface">
+    <texts>
+      <text>Parabéns!</text>
     </texts>
   </interface>
 
@@ -14,6 +20,15 @@
       <text>Bola</text>
       <text>Capa</text>
       <text>Capacete</text>
+    </texts>
+  </interface>
+
+  <interface name="item_description_interface">
+    <texts>
+      <text>Um martelo enorme para atacar seus inimigos! [Mouse Esquerdo]</text>
+      <text>Um pacote de bolinhas para jogar em seus inimigos! [Mouse Esquerdo]</text>
+      <text>Uma capa para voar! [Espaço + Segure o Espaço]</text>
+      <text>Um capacete para mergulhar! [Dentro da Água + Espaço]</text>
     </texts>
   </interface>
 

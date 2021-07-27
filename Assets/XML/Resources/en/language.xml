@@ -3,8 +3,14 @@
 <language>
   <interface name="title_interface">
     <texts>
-      <text>Press ESC to options</text>
-      <text>Press ENTER to play</text>
+      <text>Press ESC to Options</text>
+      <text>Press SPACE to Play</text>
+    </texts>
+  </interface>
+
+  <interface name="win_interface">
+    <texts>
+      <text>Congratulations!</text>
     </texts>
   </interface>
 
@@ -14,6 +20,15 @@
       <text>Ball</text>
       <text>Cloak</text>
       <text>Snork</text>
+    </texts>
+  </interface>
+
+  <interface name="item_description_interface">
+    <texts>
+      <text>An enormous hammer to attack your foes! [Left Click]</text>
+      <text>A stack of five balls! [Left Click]</text>
+      <text>A cloak to fly around! [Jump + Hold Jump]</text>
+      <text>A snork to dive around! [Inside Water + Jump]</text>
     </texts>
   </interface>
 

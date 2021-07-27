@@ -6,10 +6,12 @@ using System.Xml;
 public class LoadXMLFile : MonoBehaviour
 {
     [SerializeField] string xmlFile;
-    [SerializeField] string currentLanguage = "pt-br";
+    [SerializeField] string currentLanguage = "en";
 
     public List<string> titleInterface;
+    public List<string> winInterface;
     public List<string> shopInterface;
+    public List<string> itemDescriptionInterface;
     public List<string> stageName;
 
     // Start is called before the first frame update
@@ -26,7 +28,9 @@ public class LoadXMLFile : MonoBehaviour
         }
 
         titleInterface.Clear();
+        winInterface.Clear();
         shopInterface.Clear();
+        itemDescriptionInterface.Clear();
         stageName.Clear();
 
         TextAsset xmlData = (TextAsset)Resources.Load($"{currentLanguage}/{xmlFile}");
@@ -46,8 +50,14 @@ public class LoadXMLFile : MonoBehaviour
                     case "title_interface":
                         titleInterface.Add(n.InnerText);
                         break;
+                    case "win_interface":
+                        winInterface.Add(n.InnerText);
+                        break;
                     case "shop_interface":
                         shopInterface.Add(n.InnerText);
+                        break;
+                    case "item_description_interface":
+                        itemDescriptionInterface.Add(n.InnerText);
                         break;
                     case "stage_name":
                         stageName.Add(n.InnerText);
