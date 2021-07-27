@@ -7,11 +7,11 @@ using UnityEngine.UI;
 public class Shop : MonoBehaviour
 {
     GameController _gameController;
+    LoadXMLFile _loadXMLFile;
     Player _player;
+
     [SerializeField] GameObject shopPanel;
     [SerializeField] internal Sprite[] spritesItems;
-    [SerializeField] string[] itemsTitles;
-    [SerializeField] string[] itemsText;
     [SerializeField] int[] itemsPrices;
     [SerializeField] Text txtItemTitle;
     [SerializeField] Text txtItemPrice;
@@ -23,6 +23,7 @@ public class Shop : MonoBehaviour
     void Start()
     {
         _gameController = FindObjectOfType(typeof(GameController)) as GameController;
+        _loadXMLFile = FindObjectOfType(typeof(LoadXMLFile)) as LoadXMLFile;
         _player = FindObjectOfType(typeof(Player)) as Player;
     }
 
@@ -30,9 +31,9 @@ public class Shop : MonoBehaviour
     {
         idItem = idShopItem;
         itemImage.sprite = spritesItems[idShopItem];
-        txtItemTitle.text = itemsTitles[idShopItem];
+        txtItemTitle.text = _loadXMLFile.shopInterface[idShopItem];
         txtItemPrice.text = itemsPrices[idShopItem].ToString();
-        txtItemText.text = itemsText[idShopItem];
+        txtItemText.text = _loadXMLFile.itemDescriptionInterface[idShopItem];
         Time.timeScale = 0;
         shopPanel.SetActive(true);
     }
