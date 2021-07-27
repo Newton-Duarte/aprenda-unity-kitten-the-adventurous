@@ -24,6 +24,7 @@ public class OptionsController : MonoBehaviour
     [SerializeField] internal AudioClip titleClip;
     [SerializeField] internal AudioClip startClip;
     [SerializeField] internal AudioClip gameplayClip;
+    [SerializeField] internal AudioClip completedClip;
     [SerializeField] internal AudioClip pauseClip;
     [SerializeField] internal AudioClip unpauseClip;
 
@@ -36,8 +37,7 @@ public class OptionsController : MonoBehaviour
     void Start()
     {
         initializePrefs();
-        StartCoroutine(changeMusic(titleClip));
-        SceneManager.LoadScene(1);
+        startTitleScene();
     }
 
     // Update is called once per frame
@@ -47,6 +47,12 @@ public class OptionsController : MonoBehaviour
         {
             toggleOptions();
         }
+    }
+
+    public void startTitleScene()
+    {
+        StartCoroutine(changeMusic(titleClip));
+        SceneManager.LoadScene(1);
     }
 
     void toggleOptions()
@@ -131,5 +137,10 @@ public class OptionsController : MonoBehaviour
     public void playFX(AudioClip clip)
     {
         fxSource.PlayOneShot(clip);
+    }
+
+    public void quitGame()
+    {
+        Application.Quit();
     }
 }
