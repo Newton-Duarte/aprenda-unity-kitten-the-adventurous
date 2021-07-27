@@ -12,6 +12,7 @@ public class Commands : MonoBehaviour
 
     [SerializeField] Text txtOptions;
     [SerializeField] Text txtStart;
+    [SerializeField] Text txtWin;
 
     private void Start()
     {
@@ -32,14 +33,27 @@ public class Commands : MonoBehaviour
 
     internal void startGame()
     {
+        GlobalVariables.nextStage = 3;
         _optionsController.StartCoroutine(_optionsController.changeMusic(_optionsController.startClip));
         _fadeController.startFade(2);
     }
 
     void loadTitleTexts()
     {
-        txtOptions.text = _loadXMLFile.titleInterface[0];
-        txtStart.text = _loadXMLFile.titleInterface[1];
+        if (txtOptions)
+        {
+            txtOptions.text = _loadXMLFile.titleInterface[0];
+        }
+
+        if (txtStart)
+        {
+            txtStart.text = _loadXMLFile.titleInterface[1];
+        }
+
+        if (txtWin)
+        {
+            txtWin.text = _loadXMLFile.winInterface[0];
+        }
     }
 
     public void changeLanguage(string language)
