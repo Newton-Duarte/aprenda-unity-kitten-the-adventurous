@@ -34,7 +34,8 @@
 
   <interface name="stage_name">
     <texts>
-      <text>Stage 01 - The Enchanted Forest</text>
+      <text>Stage 01 - The Forest</text>
+      <text>Stage 02 - The Cave</text>
     </texts>
   </interface>
 </language>
