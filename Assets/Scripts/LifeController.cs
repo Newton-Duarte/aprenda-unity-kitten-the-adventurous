@@ -32,7 +32,7 @@ public class LifeController : MonoBehaviour
                 }
                 break;
             case "BallHit":
-                Destroy(collision.gameObject, 0.1f);
+                Destroy(collision.gameObject, 0.025f);
 
                 if (!isHit)
                 {
@@ -46,15 +46,17 @@ public class LifeController : MonoBehaviour
             case "HitBox":
                 if (!isHit)
                 {
-                    _gameController.playFX(hitClip);
                     isHit = true;
                     StartCoroutine(waitHit());
                     GameObject temp = Instantiate(_gameController.hitPrefab, transform.position, transform.localRotation);
                     Destroy(temp, 0.5f);
 
                     Rigidbody2D rb = collision.GetComponentInParent<Rigidbody2D>();
+                    float currentGravity = rb.gravityScale;
+                    rb.gravityScale = 1;
                     rb.velocity = new Vector2(rb.velocity.x, 0);
                     rb.AddForce(new Vector2(0, 250));
+                    rb.gravityScale = currentGravity;
                     takeHit(_gameController.hitBoxDamage);
                 }
                 break;
@@ -63,6 +65,7 @@ public class LifeController : MonoBehaviour
 
     void takeHit(int damage)
     {
+        _gameController.playFX(hitClip);
         hitPoints -= damage;
 
         if (hitPoints <= 0)
