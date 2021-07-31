@@ -33,7 +33,7 @@ public class Commands : MonoBehaviour
 
     internal void startGame()
     {
-        GlobalVariables.nextStage = 3;
+        GlobalVariables.nextStage = 4;
         _optionsController.StartCoroutine(_optionsController.changeMusic(_optionsController.startClip));
         _fadeController.startFade(2);
     }
