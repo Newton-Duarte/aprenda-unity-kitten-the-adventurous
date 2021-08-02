@@ -1728,7 +1728,7 @@ MonoBehaviour:
   timeOffset: 3
   posOffset: {x: 3, y: 1.8}
   leftLimit: 0
-  rightLimit: 93
+  rightLimit: 70.56
   bottomLimit: 0
   topLimit: 0
 --- !u!1001 &639011352
