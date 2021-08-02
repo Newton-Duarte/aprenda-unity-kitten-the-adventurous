@@ -22,7 +22,7 @@ public class LoadController : MonoBehaviour
 
         _optionsController.musicSource.loop = false;
 
-        txtStage.text = _loadXMLFile.stageName[0];
+        txtStage.text = _loadXMLFile.stageName[GlobalVariables.getNextStageDescriptionIndex()];
     }
 
     // Update is called once per frame
